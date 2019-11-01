@@ -1,6 +1,6 @@
 import React from 'react';
-// import axios from 'axios';
-import { data } from './data';
+import axios from 'axios';
+// import { data } from './data';
 import './App.css';
 import Navbar from './components/NavBar';
 import styled from 'styled-components';
@@ -49,16 +49,22 @@ class App extends React.Component {
     }
   }
 
+  // componentDidMount() {
+  //   this.setState({ players: data})
+  // }
+
   componentDidMount() {
-    // axios
-    //   .get('https://raw.githubusercontent.com/googletrends/data/master/20190815_WomensWorldCup.csv')
-    //   .then(res => {
-    //     console.log(res.data);
-    //   })
-    //   .catch(err => {
-    //     console.log('Data not collected', err)
-    //   })
-    this.setState({ players: data})
+    axios
+      .get('http://localhost:5000/api/players')
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          players: res.data
+        })
+      })
+      .catch(err => {
+        console.log('Data not collected', err)
+      })
   }
 
   render() {
@@ -67,11 +73,16 @@ class App extends React.Component {
         <Navbar />
         <Div>
           {this.state.players.map(player => (
-            <Players key={player.id}><Name>{player.name}</Name><br /><Country>Country: </Country> {player.country}<br /><Searches>{player.searches}</Searches></Players>
+            <Players key={player.id}>
+              <Name>{player.name}</Name><br />
+              <Country>Country: </Country> {player.country}<br />
+              <Searches>{player.searches}</Searches>
+            </Players>
           ))}
         </Div>
       </div>
     );
   }
 }
+
 export default App;
